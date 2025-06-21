@@ -11,6 +11,48 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/api/chart-data/category")
+def chart_data_category():
+    df = pd.read_csv("cleaned_orders.csv")
+    grouped = df.groupby("category")["total_price"].sum().sort_values(ascending=False)
+    return jsonify(
+        {
+            "labels": grouped.index.tolist(),
+            "values": grouped.values.tolist(),
+            "title": "Total Sales by Category",
+        }
+    )
+
+
+@app.route("/api/chart-data/day")
+def chart_data_day():
+    df = pd.read_csv("cleaned_orders.csv")
+    df["order_date"] = pd.to_datetime(df["order_date"])
+    grouped = df.groupby(df["order_date"].dt.date)["total_price"].sum()
+    return jsonify(
+        {
+            "labels": [str(date) for date in grouped.index],
+            "values": grouped.values.tolist(),
+            "title": "Total Orders by Day",
+        }
+    )
+
+
+@app.route("/api/chart-data/country")
+def chart_data_country():
+    df = pd.read_csv("cleaned_orders.csv")
+    grouped = (
+        df.groupby("country")["total_price"].sum().sort_values(ascending=False).head(10)
+    )
+    return jsonify(
+        {
+            "labels": grouped.index.tolist(),
+            "values": grouped.values.tolist(),
+            "title": "Revenue by Country",
+        }
+    )
+
+
 @app.route("/orders")
 def dashboard():
     df = pd.read_csv("cleaned_orders.csv")

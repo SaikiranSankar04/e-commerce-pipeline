@@ -24,70 +24,36 @@
     <title>Ecommerce Analytics Dashboard</title>
     <style>
         body {
-            margin: 10px;
-            padding: 0;
-            border: 10px solid #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
+    margin: 0;
+    padding: 10px;
+    border: 10px solid #e0e0e0;
+    font-family: Arial, sans-serif;
+}
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+.centered {
+    text-align: center;
+}
 
-        .container {
-            display: flex;
-            flex-direction: row;
-        }
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
 
-        .main-content {
-            flex: 7;
-            padding: 20px;
-            border-right: 2px solid #ccc;
-        }
+.graph-area {
+    flex: 7;
+    padding: 10px;
+}
 
-        .sidebar {
-            flex: 3;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
+.button-area {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: start;
+    align-items: stretch;
+}
 
-        .button {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .table-container, .graph-container {
-            display: none;
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
     </style>
     <script>
         function showSection(id) {
@@ -98,7 +64,7 @@
     </script>
 </head>
 <body>
-    <h1>Ecommerce Analytics Dashboard</h1>
+    <!---<h1>Ecommerce Analytics Dashboard</h1>
     <div class="container">
         <div class="main-content">
             <div id="table-view" class="table-container">
@@ -118,5 +84,59 @@
             <button class="button">🌍 Country Breakdown</button>
         </div>
     </div>
+-->
+    <body>
+    <h1 class="centered">Ecommerce Analytics Dashboard</h1>
+    <div class="container">
+        <div class="graph-area">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="button-area">
+            <button onclick="loadChart('category')">Sales by Category</button>
+            <button onclick="loadChart('day')">Orders by Day</button>
+            <button onclick="loadChart('country')">Revenue by Country</button>
+        </div>
+    </div>
+
+    <script>
+let chart;
+
+function loadChart(type) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    // Destroy old chart if exists
+    if (chart) {
+        chart.destroy();
+    }
+
+    // Fetch data from Flask (we'll create these endpoints next)
+    fetch(`/api/chart-data/${type}`)
+        .then(response => response.json())
+        .then(data => {
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: data.title,
+                        data: data.values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+}
+</script>
+
 </body>
 </html>
