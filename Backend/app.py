@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
@@ -7,6 +7,11 @@ app = Flask(__name__)
 
 
 @app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/orders")
 def dashboard():
     df = pd.read_csv("cleaned_orders.csv")
 
@@ -21,6 +26,19 @@ def dashboard():
     return render_template(
         "dashboard.html", table=df.to_html(classes="table table-striped"), plot=fig_html
     )
+
+
+@app.route("/revenue-by-category")
+def revenue_by_category():
+    df = pd.read_csv("cleaned_orders.csv")
+    df["total_price"] = df["price"] * df["quantity"]
+    grouped = (
+        df.groupby("category")["total_price"]
+        .sum()
+        .sort_values(ascending=False)
+        .reset_index()
+    )
+    return jsonify(grouped.to_dict(orient="records"))
 
 
 if __name__ == "__main__":
