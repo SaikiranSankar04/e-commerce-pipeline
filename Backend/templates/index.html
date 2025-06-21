@@ -203,9 +203,13 @@ function loadChart(type) {
           <button class="btn btn-secondary" onclick="loadChart('product')">🛍️ Top Products</button>
         </div>
       </div>
-
+      <div style="margin-top: 10px; margin-left: 350px;">
+        <a href="{{ url_for('data_category') }}" target="_blank">🔍 View Data Source</a>
+    </div>
+    
     </div>
   </div>
+  
 
   <!-- ✅ Footer -->
   <footer class="mt-5">
@@ -262,7 +266,7 @@ function loadChart(type) {
 
     // Load default chart on page load
     window.onload = () => loadChart("category");
-    <a href="{{ url_for('data_category') }}" target="_blank">🔍 View Data Source</a>
+    
 
   </script>
 </body>
