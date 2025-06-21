@@ -57,8 +57,25 @@ def chart_data_country():
 def cleaned_orders_table():
     df = pd.read_csv("cleaned_orders.csv")
     return render_template(
-        "orders_table.html",
+        "order_table.html",
         table=df.to_html(classes="table table-striped table-bordered", index=False),
+    )
+
+
+@app.route("/data/category")
+def data_category():
+    df = pd.read_csv("cleaned_orders.csv")
+    category_sales = df.groupby("category")["total_price"].sum().reset_index()
+    category_sales = category_sales.sort_values(by="total_price", ascending=False)
+    return render_template(
+        "data_table.html",
+        title="Category-wise Sales",
+        table=category_sales.to_html(
+            classes="table table-bordered table-striped",
+            index=False,
+            border=0,
+            justify="center",
+        ),
     )
 
 
