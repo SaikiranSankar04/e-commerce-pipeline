@@ -7,6 +7,11 @@ app = Flask(__name__)
 
 
 @app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/orders")
 def dashboard():
     df = pd.read_csv("cleaned_orders.csv")
 
@@ -34,11 +39,6 @@ def revenue_by_category():
         .reset_index()
     )
     return jsonify(grouped.to_dict(orient="records"))
-
-
-@app.route("/")
-def home():
-    return "✅ Flask App for Ecommerce Analytics is Running!"
 
 
 if __name__ == "__main__":
