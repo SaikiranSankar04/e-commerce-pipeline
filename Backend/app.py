@@ -53,25 +53,6 @@ def chart_data_country():
     )
 
 
-"""
-@app.route("/orders")
-def dashboard():
-    df = pd.read_csv("cleaned_orders.csv")
-
-    # Example Plot: Total Sales by Category
-    df["total_price"] = df["price"] * df["quantity"]
-    cat_sales = df.groupby("category")["total_price"].sum().reset_index()
-    fig = px.bar(
-        cat_sales, x="category", y="total_price", title="Total Sales by Category"
-    )
-    fig_html = pio.to_html(fig, full_html=False)
-
-    return render_template(
-        "dashboard.html", table=df.to_html(classes="table table-striped"), plot=fig_html
-    )
-"""
-
-
 @app.route("/orders")
 def cleaned_orders_table():
     df = pd.read_csv("cleaned_orders.csv")
