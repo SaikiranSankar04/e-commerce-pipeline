@@ -1,4 +1,4 @@
-<!-- Backend/templates/index.html -->
+<!-- Backend/templates/index.html 
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,5 +13,110 @@
         <li><a href="/daily-orders">📅 Orders per Day</a></li>
         <li><a href="/dashboard">📈 Full KPI Dashboard</a></li>
     </ul>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecommerce Analytics Dashboard</title>
+    <style>
+        body {
+            margin: 10px;
+            padding: 0;
+            border: 10px solid #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .main-content {
+            flex: 7;
+            padding: 20px;
+            border-right: 2px solid #ccc;
+        }
+
+        .sidebar {
+            flex: 3;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .table-container, .graph-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function showSection(id) {
+            const sections = document.querySelectorAll('.main-content > div');
+            sections.forEach(sec => sec.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>Ecommerce Analytics Dashboard</h1>
+    <div class="container">
+        <div class="main-content">
+            <div id="table-view" class="table-container">
+                <h2>Order Data</h2>
+                {{ table|safe }}
+            </div>
+            <div id="graph-view" class="graph-container">
+                <h2>Analytics Graphs</h2>
+                <img src="{{ url_for('static', filename='graphs/your_plot.png') }}" alt="Analytics Graph" width="100%">
+            </div>
+        </div>
+        <div class="sidebar">
+            <button class="button" onclick="showSection('table-view')">📋 View Table</button>
+            <button class="button" onclick="showSection('graph-view')">📊 View Graph</button>
+            <button class="button">📈 Orders by Day</button>
+            <button class="button">🛒 Category Analysis</button>
+            <button class="button">🌍 Country Breakdown</button>
+        </div>
+    </div>
 </body>
 </html>
