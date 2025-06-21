@@ -53,6 +53,7 @@ def chart_data_country():
     )
 
 
+"""
 @app.route("/orders")
 def dashboard():
     df = pd.read_csv("cleaned_orders.csv")
@@ -67,6 +68,16 @@ def dashboard():
 
     return render_template(
         "dashboard.html", table=df.to_html(classes="table table-striped"), plot=fig_html
+    )
+"""
+
+
+@app.route("/orders")
+def cleaned_orders_table():
+    df = pd.read_csv("cleaned_orders.csv")
+    return render_template(
+        "orders_table.html",
+        table=df.to_html(classes="table table-striped table-bordered", index=False),
     )
 
 
