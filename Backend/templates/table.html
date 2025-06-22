@@ -15,6 +15,11 @@
           {% endfor %}
         </tr>
       </thead>
+      <div class="mb-3">
+      <a href="{{ url_for('export_csv', source=title|lower|replace(' ', '_')) }}" class="btn btn-outline-primary btn-sm">Export CSV</a>
+      
+    </div>
+
       <tbody>
         {% for row in data.values %}
           <tr>

@@ -1,7 +1,9 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_file
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
+import io
+from fpdf import FPDF
 
 app = Flask(__name__)
 
@@ -36,6 +38,71 @@ def chart_data_day():
             "title": "Total Orders by Day",
         }
     )
+
+
+@app.route("/export/csv/<source>")
+def export_csv(source):
+    df = get_dataframe_by_source(source)
+    output = io.StringIO()
+    df.to_csv(output, index=False)
+    output.seek(0)
+    return send_file(
+        io.BytesIO(output.getvalue().encode()),
+        mimetype="text/csv",
+        download_name=f"{source}.csv",
+        as_attachment=True,
+    )
+
+
+@app.route("/export/pdf/<source>")
+def export_pdf(source):
+    df = get_dataframe_by_source(source)
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=10)
+    pdf.cell(
+        200, 10, txt=f"{source.replace('_', ' ').title()} Report", ln=True, align="C"
+    )
+
+    col_width = pdf.w / (len(df.columns) + 1)
+    row_height = pdf.font_size * 1.5
+
+    # Header
+    for col in df.columns:
+        pdf.cell(col_width, row_height, txt=str(col), border=1)
+    pdf.ln(row_height)
+
+    # Rows
+    for i in df.values.tolist():
+        for item in i:
+            pdf.cell(col_width, row_height, txt=str(item), border=1)
+        pdf.ln(row_height)
+
+    buf = io.BytesIO()
+    pdf.output(buf)
+    buf.seek(0)
+
+    return send_file(
+        buf,
+        mimetype="application/pdf",
+        download_name=f"{source}.pdf",
+        as_attachment=True,
+    )
+
+
+# 🔁 Helper Function
+def get_dataframe_by_source(source):
+    df = pd.read_csv("cleaned_orders.csv")
+    if source == "sales_by_category":
+        return df.groupby("category")["total_price"].sum().reset_index()
+    elif source == "sales_by_country":
+        return df.groupby("country")["total_price"].sum().reset_index()
+    elif source == "sales_by_date":
+        df["order_date"] = pd.to_datetime(df["order_date"])
+        return df.groupby(df["order_date"].dt.date)["total_price"].sum().reset_index()
+    else:
+        return df.head(20)
 
 
 @app.route("/api/chart-data/country")
