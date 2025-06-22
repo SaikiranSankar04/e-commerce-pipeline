@@ -1,18 +1,11 @@
-# 🛒 Ecommerce Analytics Pipeline
+# Ecommerce Analytics Pipeline
 
 This is a full-stack data engineering + analytics project with:
+- ETL using Pyspark
+- Fake Order Generator using Python + Faker
+- PySpark ETL pipeline to clean and enrich raw data
+- Flask dashboard with Bootstrap for styling
+- Dynamic Charts using Chart.js
+- View data sources in tabular form
+- Fully Dockerized  
 
-- 🔄 ETL using PySpark
-- 🐳 Dockerized services
-- 🐍 Python Flask backend with analytics API
-- 📊 Jupyter & Pandas dashboards
-- 🐘 Hive metastore + Postgres
-- 🔁 Fake order generator using Faker
-
-## 📦 Services
-
-- Spark Master
-- Flask API
-- Hive Metastore (Postgres)
-- Order Generator
-- Jupyter Notebook
