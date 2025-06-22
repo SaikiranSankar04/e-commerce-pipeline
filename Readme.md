@@ -9,3 +9,12 @@ This is a full-stack data engineering + analytics project with:
 - View data sources in tabular form
 - Fully Dockerized  
 
+| Component         | Tech Used             |
+|------------------|-----------------------|
+| Ingestion         | Python + Faker        |
+| ETL               | PySpark               |
+| Analytics Engine  | Pandas, Spark SQL     |
+| Backend           | Flask                 |
+| Charts            | Chart.js              |
+| Styling           | Bootstrap             |
+| Deployment        | Docker + Render       |
