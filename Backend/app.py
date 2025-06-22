@@ -62,23 +62,6 @@ def cleaned_orders_table():
     )
 
 
-@app.route("/data/category")
-def data_category():
-    df = pd.read_csv("cleaned_orders.csv")
-    category_sales = df.groupby("category")["total_price"].sum().reset_index()
-    category_sales = category_sales.sort_values(by="total_price", ascending=False)
-    return render_template(
-        "data_table.html",
-        title="Category-wise Sales",
-        table=category_sales.to_html(
-            classes="table table-bordered table-striped",
-            index=False,
-            border=0,
-            justify="center",
-        ),
-    )
-
-
 @app.route("/revenue-by-category")
 def revenue_by_category():
     df = pd.read_csv("cleaned_orders.csv")
@@ -90,6 +73,28 @@ def revenue_by_category():
         .reset_index()
     )
     return jsonify(grouped.to_dict(orient="records"))
+
+
+@app.route("/data/category")
+def data_category():
+    df = pd.read_csv("cleaned_orders.csv")
+    result = df.groupby("category")["total_price"].sum().reset_index()
+    return render_template("table.html", title="Sales by Category", data=result)
+
+
+@app.route("/data/country")
+def data_country():
+    df = pd.read_csv("cleaned_orders.csv")
+    result = df.groupby("country")["total_price"].sum().reset_index()
+    return render_template("table.html", title="Sales by Country", data=result)
+
+
+@app.route("/data/date")
+def data_date():
+    df = pd.read_csv("cleaned_orders.csv")
+    df["order_date"] = pd.to_datetime(df["order_date"])
+    result = df.groupby(df["order_date"].dt.date)["total_price"].sum().reset_index()
+    return render_template("table.html", title="Sales by Date", data=result)
 
 
 if __name__ == "__main__":

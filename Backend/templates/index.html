@@ -154,6 +154,20 @@ function loadChart(type) {
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
+    .chart-wrapper {
+  max-height: 500px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+}
+canvas {
+  width: 100% !important;
+  height: 400px !important;
+}
+
     body {
       padding: 10px;
     }
@@ -166,6 +180,7 @@ function loadChart(type) {
       font-size: 0.9em;
       color: #666;
     }
+    
   </style>
 </head>
 <body class="bg-light">
@@ -190,23 +205,62 @@ function loadChart(type) {
           </div>
           <p class="mt-2">Loading Chart...</p>
         </div>
-        <!-- Chart -->
-        <canvas id="myChart" style="width: 100%; height: 100%;"></canvas>
+        <!-- Chart 
+        <canvas id="myChart" style="width: 100%; height: 100%;"></canvas> -->
+     <!--   <div id="chart-category" style="width:70%;">
+  <canvas id="categoryChart"></canvas>
+  <div class="mt-2">
+    <a href="/data/category" target="_blank" class="btn btn-sm btn-outline-primary">🔍 View Data Source</a>
+  </div>
+</div>
+
+<div id="chart-country" style="width:70%; display: none;">
+  <canvas id="countryChart"></canvas>
+  <div class="mt-2">
+    <a href="/data/country" target="_blank" class="btn btn-sm btn-outline-primary">🔍 View Data Source</a>
+  </div>
+</div>
+
+<div id="chart-date" style="width:70%; display: none;">
+  <canvas id="dateChart"></canvas>
+  <div class="mt-2">
+    <a href="/data/date" target="_blank" class="btn btn-sm btn-outline-primary">🔍 View Data Source</a>
+  </div>
+</div>
+-->
+<div id="chart-category" class="chart-wrapper" style="display: block;">
+  <canvas id="categoryChart"></canvas>
+  <div class="mt-2 text-center">
+    <a href="/data/category" target="_blank" class="btn btn-sm btn-outline-primary">🔍 View Data Source</a>
+  </div>
+</div>
+
+<div id="chart-country" class="chart-wrapper" style="display: none;">
+  <canvas id="countryChart"></canvas>
+  <div class="mt-2 text-center">
+    <a href="/data/country" target="_blank" class="btn btn-sm btn-outline-primary">🔍 View Data Source</a>
+  </div>
+</div>
+
+<div id="chart-date" class="chart-wrapper" style="display: none;">
+  <canvas id="dateChart"></canvas>
+  <div class="mt-2 text-center">
+    <a href="/data/date" target="_blank" class="btn btn-sm btn-outline-primary">🔍 View Data Source</a>
+  </div>
+</div>
+
       </div>
 
       <!-- ✅ Buttons Panel (30%) -->
       <div class="col-md-4">
         <div class="d-grid gap-2">
-          <button class="btn btn-primary" onclick="loadChart('category')">📊 Sales by Category</button>
-          <button class="btn btn-success" onclick="loadChart('day')">📅 Orders by Day</button>
-          <button class="btn btn-warning" onclick="loadChart('country')">🌍 Revenue by Country</button>
-          <button class="btn btn-secondary" onclick="loadChart('product')">🛍️ Top Products</button>
+          <button onclick="showChart('chart-category')" class="btn btn-primary">By Category</button>
+<button onclick="showChart('chart-country')" class="btn btn-primary mt-2">By Country</button>
+<button onclick="showChart('chart-date')" class="btn btn-primary mt-2">By Date</button>
+
         </div>
       </div>
-      <div style="margin-top: 10px; margin-left: 350px;">
-        <a href="{{ url_for('data_category') }}" target="_blank">🔍 View Data Source</a>
-    </div>
-    
+      
     </div>
   </div>
   
@@ -220,54 +274,70 @@ function loadChart(type) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- ✅ JS for dynamic charts -->
-  <script>
-    let myChart;
+ 
 
-    function loadChart(type) {
-      const spinner = document.getElementById("spinner");
-      const canvas = document.getElementById("myChart");
+    <script>
+function showChart(chartId) {
+  document.getElementById('chart-category').style.display = 'none';
+  document.getElementById('chart-country').style.display = 'none';
+  document.getElementById('chart-date').style.display = 'none';
 
-      spinner.style.display = "block";
-      canvas.style.display = "none";
+  document.getElementById(chartId).style.display = 'block';
+}
 
-      fetch(`/api/chart-data/${type}`)
-        .then(response => response.json())
-        .then(data => {
-          const ctx = canvas.getContext("2d");
+function renderChart(canvasId, endpoint, labelText) {
+  const ctx = document.getElementById(canvasId).getContext("2d");
 
-          if (myChart) myChart.destroy(); // Clear previous chart
-
-          myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: data.labels,
-              datasets: [{
-                label: data.label,
-                data: data.values,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false
-            }
-          });
-
-          spinner.style.display = "none";
-          canvas.style.display = "block";
-        })
-        .catch(err => {
-          console.error("Error fetching chart data", err);
-          spinner.innerHTML = "<p class='text-danger'>Failed to load chart.</p>";
-        });
+  fetch(endpoint)
+    .then(res => res.json())
+    .then(data => {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: labelText,
+            data: data.values,
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  layout: {
+    padding: 20
+  },
+  scales: {
+    x: {
+      ticks: {
+        maxRotation: 45,
+        minRotation: 0,
+        autoSkip: true
+      }
+    },
+    y: {
+      beginAtZero: true
     }
+  }
+}
 
-    // Load default chart on page load
-    window.onload = () => loadChart("category");
-    
+      });
+    });
+}
 
-  </script>
+// ✅ Render all charts once (even if hidden)
+window.onload = () => {
+  renderChart('categoryChart', '/api/chart-data/category', 'Sales by Category');
+  renderChart('countryChart', '/api/chart-data/country', 'Revenue by Country');
+  renderChart('dateChart', '/api/chart-data/day', 'Sales by Date');
+
+  // show default one
+  showChart('chart-category');
+};
+</script>
+
+
 </body>
 </html>
