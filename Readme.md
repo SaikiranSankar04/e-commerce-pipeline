@@ -1,6 +1,7 @@
 # Ecommerce Analytics Pipeline
 
-This is a full-stack data engineering + analytics project with:
+A full-stack data engineering & analytics project that simulates an ecommerce order ecosystem.
+It features data generation, ETL processing, real-time KPIs, interactive visualizations, and containerized deployment.
 - ETL using Pyspark
 - Fake Order Generator using Python + Faker
 - PySpark ETL pipeline to clean and enrich raw data
@@ -9,12 +10,11 @@ This is a full-stack data engineering + analytics project with:
 - View data sources in tabular form
 - Fully Dockerized  
 
-| Component         | Tech Used             |
-|------------------|-----------------------|
-| Ingestion         | Python + Faker        |
-| ETL               | PySpark               |
-| Analytics Engine  | Pandas, Spark SQL     |
-| Backend           | Flask                 |
-| Charts            | Chart.js              |
-| Styling           | Bootstrap             |
-| Deployment        | Docker + Render       |
+| Layer                  | Tools & Frameworks             |
+| ---------------------- | ------------------------------ |
+| **Data Generation**    | Python, Faker                  |
+| **ETL Processing**     | PySpark, Spark SQL             |
+| **Analytics Engine**   | Pandas, Spark SQL              |
+| **Backend API**        | Flask                          |
+| **Frontend Dashboard** | Chart.js, Bootstrap            |
+| **Deployment**         | Docker, Docker Compose, Render |
