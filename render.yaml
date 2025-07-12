@@ -5,5 +5,5 @@ services:
     buildCommand: pip install -r Backend/requirements.txt
     startCommand: python Backend/app.py
     repo: https://github.com/SaikiranSankar04/e-commerce-pipeline
-    
+    plan: free
     branch: main
