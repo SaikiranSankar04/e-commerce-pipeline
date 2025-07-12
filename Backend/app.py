@@ -68,12 +68,10 @@ def export_pdf(source):
     col_width = pdf.w / (len(df.columns) + 1)
     row_height = pdf.font_size * 1.5
 
-    # Header
     for col in df.columns:
         pdf.cell(col_width, row_height, txt=str(col), border=1)
     pdf.ln(row_height)
 
-    # Rows
     for i in df.values.tolist():
         for item in i:
             pdf.cell(col_width, row_height, txt=str(item), border=1)
@@ -91,7 +89,6 @@ def export_pdf(source):
     )
 
 
-# 🔁 Helper Function
 def get_dataframe_by_source(source):
     df = pd.read_csv("cleaned_orders.csv")
     if source == "sales_by_category":
