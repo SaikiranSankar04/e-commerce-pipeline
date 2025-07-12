@@ -8,4 +8,3 @@ artifacts/
 output/
 *.sqlite
 *.ipynb_checkpoints/
-#
