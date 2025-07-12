@@ -27,7 +27,7 @@ def generate_order():
     }
 
 
-# Output CSV
+
 output_file = "raw_orders.csv"
 
 with open(output_file, mode="w", newline="", encoding="utf-8") as file:
